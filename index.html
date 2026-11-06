@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FIMS — Fuel Inventory Management System</title>
+<style>
+:root{--navy:#10243a;--blue:#1769aa;--teal:#0b8f87;--bg:#f3f6fa;--line:#dfe6ee;--ink:#182433;--muted:#64748b;--red:#c0392b;--amber:#b7791f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(110deg,#10243a,#174c70);color:#fff;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-size:20px;font-weight:800;letter-spacing:.4px}.brand small{display:block;font-size:11px;font-weight:500;opacity:.8;letter-spacing:1px}
+header .right{font-size:12px;opacity:.9}.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 72px)}
+nav{background:#fff;border-right:1px solid var(--line);padding:14px 10px}nav .group{font-size:10px;color:#8a98a9;font-weight:800;letter-spacing:1px;padding:13px 12px 6px}
+nav button{display:flex;width:100%;text-align:left;border:0;background:transparent;padding:10px 12px;border-radius:8px;color:#405166;cursor:pointer;font-weight:600;margin:2px 0}
+nav button.active,nav button:hover{background:#eaf3fb;color:var(--blue)}
+main{padding:22px;min-width:0}.page{display:none}.page.active{display:block}.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:22px;margin:0 0 3px}h2{font-size:16px;margin:0 0 12px}.sub{color:var(--muted);font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 2px 8px #19334d08}
+.kpi{font-size:24px;font-weight:800;margin:7px 0 2px}.klabel{font-size:12px;color:var(--muted)}.kfoot{font-size:11px;color:var(--teal)}
+.grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}.btn{border:0;border-radius:8px;padding:9px 13px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}.btn.secondary{background:#e9f0f6;color:#29435c}.btn.danger{background:#fff0ef;color:var(--red)}.btn.small{padding:6px 9px;font-size:12px}
+.actions{display:flex;gap:7px;flex-wrap:wrap}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar input,.toolbar select{max-width:240px}
+input,select,textarea{width:100%;border:1px solid #cfd9e4;border-radius:7px;padding:9px;background:#fff;color:var(--ink);font:inherit}
+label{display:block;font-size:12px;font-weight:700;color:#506174;margin:0 0 5px}.field{margin-bottom:12px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #edf1f5;vertical-align:middle}th{color:#62748a;background:#f8fafc;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.tablewrap{overflow:auto}.pill{display:inline-block;border-radius:20px;padding:3px 8px;font-size:10px;font-weight:800;background:#e8f5ef;color:#19734d}.pill.warn{background:#fff5df;color:#9a6700}.pill.off{background:#f0f2f5;color:#68778a}
+.bar{height:8px;background:#e8eef4;border-radius:9px;overflow:hidden;min-width:80px}.bar i{display:block;height:100%;background:var(--teal)}
+.note{padding:11px 13px;border-radius:8px;background:#edf6fc;color:#315a78;font-size:12px;margin:12px 0}.empty{padding:25px;text-align:center;color:#8795a5}
+.modal{display:none;position:fixed;inset:0;background:#0c1c2dcc;z-index:5;align-items:center;justify-content:center;padding:16px}.modal.show{display:flex}.dialog{background:#fff;border-radius:13px;padding:20px;width:min(620px,100%);max-height:90vh;overflow:auto}.dialoghead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.close{border:0;background:#eef2f6;border-radius:7px;padding:6px 10px;cursor:pointer}
+@media(max-width:850px){.layout{grid-template-columns:1fr}nav{display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--line);gap:4px}nav .group{display:none}nav button{white-space:nowrap;width:auto}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}
+@media(max-width:520px){main{padding:14px}.cards{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.kpi{font-size:20px}}
+</style></head>
+<body>
+<header><div class="brand">FIMS <small>FUEL INVENTORY MANAGEMENT SYSTEM</small></div><div class="right">Sistem Terpadu Persediaan BBM · Prototipe lokal</div></header>
+<div class="layout">
+<nav>
+<div class="group">RINGKASAN</div><button class="active" data-page="dashboard">▦ Dashboard</button>
+<div class="group">MASTER DATA</div><button data-page="products">▤ Barang / Produk</button><button data-page="suppliers">♙ Supplier</button><button data-page="customers">♧ Customer</button><button data-page="locations">⌖ Lokasi & Tangki</button>
+<div class="group">TRANSAKSI</div><button data-page="purchases">＋ Pembelian / PO</button><button data-page="receipts">↓ Penerimaan</button><button data-page="sales">－ Penjualan / SO</button><button data-page="deliveries">↑ Pengeluaran / DO</button><button data-page="invoices">▧ Invoice</button>
+<div class="group">PENGENDALIAN</div><button data-page="stock">▥ Kartu Stok</button><button data-page="reports">▧ Laporan</button>
+</nav>
+<main>
+<section id="dashboard" class="page active">
+<div class="head"><div><h1>Dashboard Persediaan BBM</h1><div class="sub">Pantau stok, kapasitas tangki, dan transaksi dalam satu tampilan.</div></div><button class="btn" onclick="openModal('receipt')">+ Catat Penerimaan</button></div>
+<div class="cards" id="kpis"></div>
+<div class="grid2"><div class="panel"><h2>Stok per Produk</h2><div id="productSummary"></div></div><div class="panel"><h2>Kapasitas Tangki</h2><div id="tankSummary"></div></div></div>
+<div class="panel" style="margin-top:14px"><h2>Aktivitas Terakhir</h2><div class="tablewrap"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Dokumen</th><th>Produk</th><th>Jumlah</th><th>Keterangan</th></tr></thead><tbody id="recent"></tbody></table></div></div>
+<div class="note">Stok dihitung dari transaksi penerimaan dan pengeluaran yang sudah dikonfirmasi. Satuan dasar Liter; 1 KL = 1.000 Liter.</div>
+</section>
+<section id="products" class="page"><div class="head"><div><h1>Master Barang / Produk</h1><div class="sub">Kelola jenis BBM dan satuan stok.</div></div><button class="btn" onclick="openModal('product')">+ Tambah Produk</button></div><div class="panel" id="productTable"></div></section>
+<section id="suppliers" class="page"><div class="head"><div><h1>Master Supplier</h1><div class="sub">Data pemasok yang terhubung ke PO dan penerimaan.</div></div><button class="btn" onclick="openModal('supplier')">+ Tambah Supplier</button></div><div class="panel" id="supplierTable"></div></section>
+<section id="customers" class="page"><div class="head"><div><h1>Master Customer</h1><div class="sub">Data pelanggan yang terhubung ke SO, DO, dan invoice.</div></div><button class="btn" onclick="openModal('customer')">+ Tambah Customer</button></div><div class="panel" id="customerTable"></div></section>
+<section id="locations" class="page"><div class="head"><div><h1>Lokasi & Tangki</h1><div class="sub">Lokasi dan tangki dapat ditambah kapan saja.</div></div><div class="actions"><button class="btn secondary" onclick="openModal('location')">+ Lokasi</button><button class="btn" onclick="openModal('tank')">+ Tangki</button></div></div><div class="grid2"><div class="panel"><h2>Daftar Lokasi</h2><div id="locationTable"></div></div><div class="panel"><h2>Daftar Tangki</h2><div id="tankTable"></div></div></div></section>
+<section id="purchases" class="page"><div class="head"><div><h1>Pembelian / Purchase Order</h1><div class="sub">Buat pesanan pembelian kepada supplier.</div></div><button class="btn" onclick="openModal('po')">+ Buat PO</button></div><div class="panel" id="poTable"></div></section>
+<section id="receipts" class="page"><div class="head"><div><h1>Penerimaan Barang</h1><div class="sub">Konfirmasi penerimaan untuk menambah stok tangki.</div></div><button class="btn" onclick="openModal('receipt')">+ Penerimaan</button></div><div class="panel" id="receiptTable"></div></section>
+<section id="sales" class="page"><div class="head"><div><h1>Penjualan / Sales Order</h1><div class="sub">Buat pesanan customer sebelum pengeluaran.</div></div><button class="btn" onclick="openModal('so')">+ Buat SO</button></div><div class="panel" id="soTable"></div></section>
+<section id="deliveries" class="page"><div class="head"><div><h1>Pengeluaran / Delivery Order</h1><div class="sub">Konfirmasi pengeluaran untuk mengurangi stok.</div></div><button class="btn" onclick="openModal('delivery')">+ Pengeluaran</button></div><div class="panel" id="deliveryTable"></div></section>
+<section id="invoices" class="page"><div class="head"><div><h1>Invoice</h1><div class="sub">Pencatatan tagihan supplier maupun customer.</div></div><button class="btn" onclick="openModal('invoice')">+ Buat Invoice</button></div><div class="panel" id="invoiceTable"></div></section>
+<section id="stock" class="page"><div class="head"><div><h1>Kartu Stok</h1><div class="sub">Mutasi masuk dan keluar berdasarkan transaksi terkonfirmasi.</div></div></div><div class="panel" id="stockTable"></div></section>
+<section id="reports" class="page"><div class="head"><div><h1>Laporan</h1><div class="sub">Rekap stok, pembelian, penjualan, dan unduh data transaksi.</div></div><button class="btn" onclick="exportCSV()">Unduh CSV Mutasi</button></div><div class="panel" id="reportContent"></div></section>
+</main></div>
+<div class="modal" id="modal"><div class="dialog"><div class="dialoghead"><h2 id="modalTitle">Form</h2><button class="close" onclick="closeModal()">✕</button></div><form id="dataForm"><div id="formFields"></div><div class="actions"><button class="btn" type="submit">Simpan</button><button class="btn secondary" type="button" onclick="closeModal()">Batal</button></div></form></div></div>
+<script>
+const initial={products:[{id:1,name:'Avtur',code:'AVT',unit:'Liter'},{id:2,name:'Pertalite',code:'PLT',unit:'Liter'},{id:3,name:'Pertamax',code:'PXM',unit:'Liter'}],suppliers:[],customers:[],locations:[{id:1,name:'Lokasi Utama',address:'Belum diisi'}],tanks:[{id:1,name:'Tangki Avtur 1',locationId:1,productId:1,capacity:100000,stock:0}],pos:[],receipts:[],sos:[],deliveries:[],invoices:[],movements:[]};
+let db;try{db=JSON.parse(localStorage.getItem('fims_integrated'))||initial}catch(e){db=initial}
+let currentType='';
+const save=()=>localStorage.setItem('fims_integrated',JSON.stringify(db));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString('id-ID',{maximumFractionDigits:2});
+const get=(arr,id)=>arr.find(x=>x.id==id);
+const name=(arr,id,field='name')=>get(arr,id)?.[field]||'-';
+const next=arr=>Math.max(0,...arr.map(x=>x.id||0))+1;
+const doc=(prefix,arr)=>prefix+'/'+new Date().getFullYear()+'/'+String(arr.length+1).padStart(4,'0');
+const stockByTank=id=>db.movements.filter(m=>m.tankId==id).reduce((a,m)=>a+(m.type==='IN'?m.qty:-m.qty),0);
+const stockByProduct=id=>db.tanks.filter(t=>t.productId==id).reduce((a,t)=>a+stockByTank(t.id),0);
+function nav(p){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===p));document.querySelectorAll('nav button[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===p));render()}
+document.querySelectorAll('nav button[data-page]').forEach(b=>b.onclick=()=>nav(b.dataset.page));
+function table(headers,rows){return `<div class="tablewrap"><table><thead><tr>${headers.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${headers.length}" class="empty">Belum ada data.</td></tr>`}</tbody></table></div>`}
+function render(){
+document.getElementById('kpis').innerHTML=[['Total Stok',fmt(db.tanks.reduce((a,t)=>a+stockByTank(t.id),0))+' L','Akumulasi semua tangki'],['Produk',db.products.length,'Master barang aktif'],['Tangki',db.tanks.length,'Terdaftar di sistem'],['Transaksi',db.movements.length,'Mutasi terkonfirmasi']].map(x=>`<div class="card"><div class="klabel">${x[0]}</div><div class="kpi">${x[1]}</div><div class="kfoot">${x[2]}</div></div>`).join('');
+document.getElementById('productSummary').innerHTML=db.products.map(p=>`<p><b>${esc(p.name)}</b><span style="float:right">${fmt(stockByProduct(p.id))} L</span></p>`).join('')||'Belum ada produk';
+document.getElementById('tankSummary').innerHTML=db.tanks.map(t=>{let s=stockByTank(t.id),pct=t.capacity?Math.min(100,s/t.capacity*100):0;return `<p style="margin:12px 0 4px"><b>${esc(t.name)}</b><span style="float:right">${fmt(s)} / ${fmt(t.capacity)} L</span></p><div class="bar"><i style="width:${pct}%"></i></div><small class="sub">${esc(name(db.locations,t.locationId))} · ${esc(name(db.products,t.productId))}</small>`}).join('')||'Belum ada tangki';
+document.getElementById('recent').innerHTML=db.movements.slice().reverse().slice(0,8).map(m=>`<tr><td>${esc(m.date)}</td><td>${m.type==='IN'?'Penerimaan':'Pengeluaran'}</td><td>${esc(m.doc)}</td><td>${esc(name(db.products,m.productId))}</td><td>${fmt(m.qty)} L</td><td>${esc(m.note||'-')}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">Belum ada aktivitas.</td></tr>';
+document.getElementById('productTable').innerHTML=table(['Kode','Nama Produk','Satuan','Stok Saat Ini'],db.products.map(p=>`<tr><td>${esc(p.code)}</td><td>${esc(p.name)}</td><td>${esc(p.unit)}</td><td>${fmt(stockByProduct(p.id))} L</td></tr>`));
+document.getElementById('supplierTable').innerHTML=table(['Nama Supplier','Kontak','Telepon','Email','Alamat'],db.suppliers.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.contact)}</td><td>${esc(x.phone)}</td><td>${esc(x.email)}</td><td>${esc(x.address)}</td></tr>`));
+document.getElementById('customerTable').innerHTML=table(['Nama Customer','Kontak','Telepon','Email','Alamat'],db.customers.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.contact)}</td><td>${esc(x.phone)}</td><td>${esc(x.email)}</td><td>${esc(x.address)}</td></tr>`));
+document.getElementById('locationTable').innerHTML=table(['Nama Lokasi','Alamat'],db.locations.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.address)}</td></tr>`));
+document.getElementById('tankTable').innerHTML=table(['Tangki','Lokasi','Produk','Kapasitas','Stok'],db.tanks.map(t=>`<tr><td>${esc(t.name)}</td><td>${esc(name(db.locations,t.locationId))}</td><td>${esc(name(db.products,t.productId))}</td><td>${fmt(t.capacity)} L</td><td>${fmt(stockByTank(t.id))} L</td></tr>`));
+document.getElementById('poTable').innerHTML=table(['Nomor PO','Tanggal','Supplier','Produk','Qty','Status'],db.pos.map(x=>`<tr><td>${esc(x.doc)}</td><td>${esc(x.date)}</td><td>${esc(name(db.suppliers,x.supplierId))}</td><td>${esc(name(db.products,x.productId))}</td><td>${fmt(x.qty)} L</td><td><span class="pill warn">${esc(x.status)}</span></td></tr>`));
+document.getElementById('receiptTable').innerHTML=table(['Nomor Penerimaan','Tanggal','Supplier','Tangki','Produk','Qty'],db.receipts.map(x=>`<tr><td>${esc(x.doc)}</td><td>${esc(x.date)}</td><td>${esc(name(db.suppliers,x.supplierId))}</td><td>${esc(name(db.tanks,x.tankId))}</td><td>${esc(name(db.products,x.productId))}</td><td>${fmt(x.qty)} L</td></tr>`));
+document.getElementById('soTable').innerHTML=table(['Nomor SO','Tanggal','Customer','Produk','Qty','Status'],db.sos.map(x=>`<tr><td>${esc(x.doc)}</td><td>${esc(x.date)}</td><td>${esc(name(db.customers,x.customerId))}</td><td>${esc(name(db.products,x.productId))}</td><td>${fmt(x.qty)} L</td><td><span class="pill warn">${esc(x.status)}</span></td></tr>`));
+document.getElementById('deliveryTable').innerHTML=table(['Nomor DO','Tanggal','Customer','Tangki','Produk','Qty'],db.deliveries.map(x=>`<tr><td>${esc(x.doc)}</td><td>${esc(x.date)}</td><td>${esc(name(db.customers,x.customerId))}</td><td>${esc(name(db.tanks,x.tankId))}</td><td>${esc(name(db.products,x.productId))}</td><td>${fmt(x.qty)} L</td></tr>`));
+document.getElementById('invoiceTable').innerHTML=table(['Nomor Invoice','Tanggal','Jenis','Pihak','Nilai','Status'],db.invoices.map(x=>`<tr><td>${esc(x.doc)}</td><td>${esc(x.date)}</td><td>${esc(x.kind)}</td><td>${esc(x.party)}</td><td>Rp ${fmt(x.amount)}</td><td><span class="pill">${esc(x.status)}</span></td></tr>`));
+document.getElementById('stockTable').innerHTML=table(['Tanggal','Dokumen','Arah','Lokasi / Tangki','Produk','Qty','Saldo tangki'],db.movements.slice().reverse().map(m=>`<tr><td>${esc(m.date)}</td><td>${esc(m.doc)}</td><td>${m.type==='IN'?'Masuk':'Keluar'}</td><td>${esc(name(db.tanks,m.tankId))}</td><td>${esc(name(db.products,m.productId))}</td><td>${fmt(m.qty)} L</td><td>${fmt(stockByTank(m.tankId))} L</td></tr>`));
+document.getElementById('reportContent').innerHTML=`<h2>Ringkasan Stok per Tangki</h2>${table(['Lokasi','Tangki','Produk','Kapasitas (L)','Stok (L)','Sisa Kapasitas (L)'],db.tanks.map(t=>`<tr><td>${esc(name(db.locations,t.locationId))}</td><td>${esc(t.name)}</td><td>${esc(name(db.products,t.productId))}</td><td>${fmt(t.capacity)}</td><td>${fmt(stockByTank(t.id))}</td><td>${fmt(t.capacity-stockByTank(t.id))}</td></tr>`))}<p class="sub">Data laporan mengikuti transaksi yang telah tersimpan pada perangkat/browser ini.</p>`;
+}
+function field(label,key,type='text',opts=null,required=true){let input=opts?`<select name="${key}" ${required?'required':''}><option value="">Pilih...</option>${opts.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')}</select>`:`<input name="${key}" type="${type}" ${required?'required':''} ${type==='number'?'min="0" step="any"':''}>`;return `<div class="field"><label>${label}</label>${input}</div>`}
+function openModal(type){currentType=type;let f='',title='';
+const today=new Date().toISOString().slice(0,10);
+if(type==='product'){title='Tambah Produk';f=field('Kode Produk','code')+field('Nama Produk','name')+field('Satuan','unit');}
+if(type==='supplier'||type==='customer'){title=type==='supplier'?'Tambah Supplier':'Tambah Customer';f=field('Nama Badan Usaha','name')+field('Nama Kontak','contact', 'text',null,false)+field('Nomor Telepon','phone','tel',null,false)+field('Email','email','email',null,false)+field('Alamat','address','text',null,false)+field('NPWP','npwp','text',null,false);}
+if(type==='location'){title='Tambah Lokasi';f=field('Nama Lokasi','name')+field('Alamat','address','text',null,false);}
+if(type==='tank'){title='Tambah Tangki';f=field('Nama / Kode Tangki','name')+field('Lokasi','locationId','text',db.locations)+field('Produk','productId','text',db.products)+field('Kapasitas (Liter)','capacity','number');}
+if(type==='po'){title='Buat Purchase Order';f=field('Tanggal','date','date',null,true)+field('Supplier','supplierId','text',db.suppliers)+field('Produk','productId','text',db.products)+field('Jumlah (Liter)','qty','number')+field('Harga per Liter (Rp)','price','number');}
+if(type==='receipt'){title='Catat Penerimaan BBM';f=field('Tanggal','date','date',null,true)+field('Supplier','supplierId','text',db.suppliers)+field('Tangki Tujuan','tankId','text',db.tanks)+field('Jumlah diterima (Liter)','qty','number')+field('Nomor referensi / surat jalan','note','text',null,false);}
+if(type==='so'){title='Buat Sales Order';f=field('Tanggal','date','date',null,true)+field('Customer','customerId','text',db.customers)+field('Produk','productId','text',db.products)+field('Jumlah pesanan (Liter)','qty','number')+field('Harga per Liter (Rp)','price','number');}
+if(type==='delivery'){title='Catat Pengeluaran BBM';f=field('Tanggal','date','date',null,true)+field('Customer','customerId','text',db.customers)+field('Tangki sumber','tankId','text',db.tanks)+field('Jumlah keluar (Liter)','qty','number')+field('Nomor DO / surat jalan','note','text',null,false);}
+if(type==='invoice'){title='Buat Invoice';f=`<div class="field"><label>Jenis Invoice</label><select name="kind"><option>Pembelian</option><option>Penjualan</option></select></div>`+field('Tanggal','date','date',null,true)+field('Nama pihak (supplier/customer)','party')+field('Nilai (Rp)','amount','number')+field('Nomor referensi','note','text',null,false);}
+document.getElementById('modalTitle').textContent=title;document.getElementById('formFields').innerHTML=f;
+document.querySelectorAll('#formFields input[type=date]').forEach(x=>x.value=today);
+document.getElementById('modal').classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+document.getElementById('dataForm').onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target).entries());let id=next(db[currentType==='product'?'products':currentType==='supplier'?'suppliers':currentType==='customer'?'customers':currentType==='location'?'locations':currentType==='tank'?'tanks':currentType==='po'?'pos':currentType==='receipt'?'receipts':currentType==='so'?'sos':currentType==='delivery'?'deliveries':'invoices']);
+for(let k of ['locationId','productId','tankId','supplierId','customerId','capacity','qty','price','amount'])if(d[k]!==undefined)d[k]=Number(d[k]);
+const push=(arr,obj)=>arr.push({id,...obj});
+if(currentType==='product')push(db.products,d);
+if(currentType==='supplier')push(db.suppliers,d);
+if(currentType==='customer')push(db.customers,d);
+if(currentType==='location')push(db.locations,d);
+if(currentType==='tank'){if(db.tanks.some(t=>t.name.toLowerCase()===d.name.toLowerCase()))return alert('Nama tangki sudah digunakan.');push(db.tanks,d);}
+if(currentType==='po'){d.doc=doc('PO',db.pos);d.status='Menunggu penerimaan';push(db.pos,d);}
+if(currentType==='receipt'){
+let t=get(db.tanks,d.tankId);if(!t)return alert('Pilih tangki.');let bal=stockByTank(t.id);if(bal+d.qty>t.capacity)return alert('Penerimaan melebihi kapasitas tangki.');d.productId=t.productId;d.doc=doc('GR',db.receipts);push(db.receipts,d);db.movements.push({id:next(db.movements),date:d.date,doc:d.doc,type:'IN',tankId:t.id,productId:t.productId,qty:d.qty,note:d.note});
+}
+if(currentType==='so'){d.doc=doc('SO',db.sos);d.status='Menunggu pengeluaran';push(db.sos,d);}
+if(currentType==='delivery'){
+let t=get(db.tanks,d.tankId);if(!t)return alert('Pilih tangki.');let bal=stockByTank(t.id);if(d.qty>bal)return alert('Stok tidak mencukupi. Stok tersedia '+fmt(bal)+' Liter.');d.productId=t.productId;d.doc=doc('DO',db.deliveries);push(db.deliveries,d);db.movements.push({id:next(db.movements),date:d.date,doc:d.doc,type:'OUT',tankId:t.id,productId:t.productId,qty:d.qty,note:d.note});
+}
+if(currentType==='invoice'){d.doc=doc('INV',db.invoices);d.status='Belum dibayar';push(db.invoices,d);}
+save();closeModal();e.target.reset();render();
+};
+function exportCSV(){let rows=[['Tanggal','Dokumen','Jenis','Tangki','Produk','Jumlah Liter','Catatan'],...db.movements.map(m=>[m.date,m.doc,m.type,name(db.tanks,m.tankId),name(db.products,m.productId),m.qty,m.note||''])];let csv=rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='laporan_mutasi_fims.csv';a.click();URL.revokeObjectURL(a.href)}
+render();
+</script></body></html>
